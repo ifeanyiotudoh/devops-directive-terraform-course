@@ -2,7 +2,7 @@ terraform {
   # Assumes s3 bucket and dynamo DB table already set up
   # See /code/03-basics/aws-backend
   backend "s3" {
-    bucket         = "devops-directive-tf-state"
+    bucket         = "bucket-otus-comms1"
     key            = "07-managing-multiple-environments/production/terraform.tfstate"
     region         = "us-east-1"
     dynamodb_table = "terraform-state-locking"
@@ -39,7 +39,7 @@ module "web_app" {
   domain           = "devopsdeployed.com"
   environment_name = local.environment_name
   instance_type    = "t2.small"
-  create_dns_zone  = false
+  create_dns_zone  = terraform.workspace == "production"
   db_name          = "${local.environment_name}mydb"
   db_user          = "foo"
   db_pass          = var.db_pass
